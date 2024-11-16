@@ -5,6 +5,9 @@
 # Ejecutar en desarrollo
 
 1. Clonar el repositorio
+```
+git clone https://github.com/dvl666/nest-pokedex.git
+```
 2. Ejecutar 
 ```
 npm i
