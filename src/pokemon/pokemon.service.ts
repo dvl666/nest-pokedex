@@ -4,7 +4,6 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { isValidObjectId, Model } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { error } from 'console';
 
 @Injectable()
 export class PokemonService {
@@ -15,6 +14,7 @@ export class PokemonService {
   ) {}
 
   async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
+
     createPokemonDto.name = createPokemonDto.name.toLowerCase();
 
     /**
@@ -26,6 +26,7 @@ export class PokemonService {
     } catch (error) {
       this.validateDuplicatePokemon(error);
     }
+
   }
 
   findAll() {
@@ -33,19 +34,23 @@ export class PokemonService {
   }
 
   async findOne(term: string): Promise<Pokemon> {
-    const key = isValidObjectId(term) ? '_id' : !isNaN(+term) ? 'no' : 'name';   
-    const pokemon: Pokemon = await this.pokemonModel.findOne({ 
-      [key]: key === 'no' ? +term : term
+    /**
+     * Se usa un operador ternario (key) el cual sera _id si el termino es un objectId valido, no si es un numero y name si es un string
+     * posteriormente se realiza la consulta a la base de datos con el key correspondiente, en la cual tambien se usa un operador ternario
+     * para saber si el key es no, en cuyo caso se convierte el termino a un numero
+     */
+    const key = isValidObjectId(term) ? '_id' : !isNaN(+term) ? 'no' : 'name'; 
+    const pokemon: Pokemon = await this.pokemonModel.findOne({
+      [key]: key === 'no' ? +term : term                                                
     });
     if ( !pokemon ) throw new NotFoundException(`Pokemon with id/name/number ${term} not found`);
     return pokemon;
+  
   }
 
-  // if ( !isNaN(+term) ) pokemon = await this.pokemonModel.findOne({ no: +term });
-  // if (isValidObjectId(term)) pokemon = await this.pokemonModel.findById({ _id: term });
-  // if ( !pokemon ) pokemon = await this.pokemonModel.findOne({ name: term.toLowerCase() });
-  // if (!pokemon) throw new NotFoundException(`Pokemon with id/name/number ${term} not found`);
-
+  /**
+   * Actualiza un pokemon por id o nombre, si el nombre es un string se convierte a minusculas
+   */
   async update(term: string, updatePokemonDto: UpdatePokemonDto) {
     updatePokemonDto.name = updatePokemonDto.name.toLowerCase();
     const pokemon: Pokemon = await this.findOne(term);
@@ -60,9 +65,14 @@ export class PokemonService {
     }
   }
 
-  remove(id: string) {
-    
-    return `This action removes a #${id} pokemon`;
+  async remove(id: string) {
+      /**
+       * Elimina un pokemon por id y verifica si se elimino algun registro, si no se elimino ningun registro envia un mensaje de que no se encontró el pokemon
+       */
+      const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
+      if ( deletedCount === 0 ) throw new NotFoundException(`Pokemon with id ${id} not found`);
+      return `Se a eliminado el pokemon con id: ${id}`;
+
   }
 
   validateDuplicatePokemon(error: any) {
