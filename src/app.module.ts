@@ -3,6 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from './common/common.module';
 
 @Module({
   /**
@@ -27,7 +28,9 @@ import { MongooseModule } from '@nestjs/mongoose';
      * Importamos el módulo `PokemonModule` que contiene toda la lógica y configuración
      * necesaria para manejar las rutas y operaciones relacionadas con los pokemones.
      */
-    PokemonModule
+    PokemonModule,
+
+    CommonModule
   ],
 })
 export class AppModule {}
