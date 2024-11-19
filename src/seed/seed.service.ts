@@ -1,5 +1,6 @@
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { PokeResponse } from './interfaces/poke-response.interface';
 
 @Injectable()
 export class SeedService {
@@ -10,9 +11,16 @@ export class SeedService {
 
 
     async executeSeed() {
-        const {data} = await this.http.axiosRef.get('https://pokeapi.co/api/v2/pokemon?limit=650')
+        const { data } = await this.http.axiosRef.get<PokeResponse>('https://pokeapi.co/api/v2/pokemon?limit=20');
         console.log('Seed executed');
-        return data;
+
+        data.results.forEach(({ name, url }) => {
+            const segments = url.split('/');
+            const no:number = +segments[segments.length - 2];
+            console.log({ name, no });
+        })
+
+        return data.results;
     }
 
 }
