@@ -67,7 +67,8 @@ export class PokemonService {
 
   async remove(id: string) {
       /**
-       * Elimina un pokemon por id y verifica si se elimino algun registro, si no se elimino ningun registro envia un mensaje de que no se encontró el pokemon
+       * Elimina un pokemon por id y verifica si se elimino algun registro, si no se elimino ningun registro envia un mensaje de 
+       * que no se encontró el pokemon
        */
       const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
       if ( deletedCount === 0 ) throw new NotFoundException(`Pokemon with id ${id} not found`);
