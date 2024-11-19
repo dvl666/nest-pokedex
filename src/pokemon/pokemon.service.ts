@@ -76,13 +76,35 @@ export class PokemonService {
 
   }
 
+  async createMany(createPokemonsDto: CreatePokemonDto[]): Promise<Pokemon[]> {
+    await this.pokemonModel.deleteMany({});
+    /**
+     * Se manejo el error de esta forma para realizar la menor cantidad de consultas posibles a la base de datos
+     */
+    try {
+      const pokemons = await this.pokemonModel.insertMany( createPokemonsDto );
+      return pokemons;
+    } catch (error) {
+      this.validateDuplicatePokemons(error);
+    }
+  }
+
   validateDuplicatePokemon(error: any) {
     if ( error.code === 11000 ) {
       throw new BadRequestException(`Pokemon already exist in db ${ JSON.stringify(error.keyValue) }`);
      }
-     console.log( error );
      throw new InternalServerErrorException(`Error creating pokemon, please check server logs`);
   }
+
+  validateDuplicatePokemons(error: any) {
+    let errIndex = error.message.indexOf(`{`);
+    let err = error.message.slice(errIndex, error.message.length);  
+    if ( error.code === 11000 ) {
+      throw new BadRequestException(`Pokemon already exist in db with -> ${ err }`);
+     }
+     throw new InternalServerErrorException(`Error creating pokemon, please check server logs`);
+  }
+
 
 }
 
