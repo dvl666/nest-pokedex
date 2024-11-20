@@ -78,9 +78,6 @@ export class PokemonService {
 
   async createMany(createPokemonsDto: CreatePokemonDto[]): Promise<Pokemon[]> {
     await this.pokemonModel.deleteMany({});
-    /**
-     * Se manejo el error de esta forma para realizar la menor cantidad de consultas posibles a la base de datos
-     */
     try {
       const pokemons = await this.pokemonModel.insertMany( createPokemonsDto );
       return pokemons;
@@ -104,7 +101,6 @@ export class PokemonService {
      }
      throw new InternalServerErrorException(`Error creating pokemon, please check server logs`);
   }
-
 
 }
 
