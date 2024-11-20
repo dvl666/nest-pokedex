@@ -5,7 +5,6 @@ import { isValidObjectId, Model } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { off } from 'process';
 
 @Injectable()
 export class PokemonService {
