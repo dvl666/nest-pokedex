@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { config } from 'environment';
+import { ConfigModule } from '@nestjs/config';
+import { envConfig } from './common/config/env.config';
 
 @Module({
   /**
@@ -13,6 +15,12 @@ import { config } from 'environment';
    * necesarias para que este módulo funcione correctamente.
    */
   imports: [
+    /**
+     * Configuramos el módulo `ConfigModule` para cargar las variables de entorno
+     */
+    ConfigModule.forRoot({
+      load: [envConfig],
+    }),
     /**
      * Configuramos `ServeStaticModule` para servir archivos estáticos.
      * Aquí, `rootPath` define el directorio desde donde se servirán los archivos.
@@ -24,16 +32,13 @@ import { config } from 'environment';
     /**
      * Se realiza la conexión a la base de datos de MongoDB
      */
-    MongooseModule.forRoot(config.MONGODB),
-
+    MongooseModule.forRoot( envConfig().mongodb ),
     /**
      * Importamos el módulo `PokemonModule` que contiene toda la lógica y configuración
      * necesaria para manejar las rutas y operaciones relacionadas con los pokemones.
      */
     PokemonModule,
-
     CommonModule,
-
     SeedModule
   ],
 })
