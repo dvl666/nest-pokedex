@@ -4,6 +4,8 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { isValidObjectId, Model } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { off } from 'process';
 
 @Injectable()
 export class PokemonService {
@@ -29,8 +31,16 @@ export class PokemonService {
 
   }
 
-  findAll() {
-    return `This action returns all pokemon`;
+  /**
+   * Aqui metemos la logica de paginacion, limit y offset son parametros opcionales que se pueden pasar en la url
+   */
+  async findAll( paginationDto: PaginationDto ): Promise<Pokemon[]> {
+    const { limit = 20, offset = 0 } = paginationDto;
+    return await this.pokemonModel.find()
+      .limit( limit )
+      .skip( offset )
+      .sort({ no: 1 })
+      .select( '_id name no' ) // -> tambien funcionaria como .select('-__v') para no mostrar el campo __v
   }
 
   async findOne(term: string): Promise<Pokemon> {

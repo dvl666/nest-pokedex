@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { query } from 'express';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -14,9 +16,12 @@ export class PokemonController {
     return this.pokemonService.create(createPokemonDto);
   }
 
+  /**
+   * paginationDto tiene su propia clase en la cual se validan los campos limit y offset (ver main para adicionar parametros especiales)
+   */
   @Get()
-  findAll() {
-    return this.pokemonService.findAll();
+  findAll( @Query() paginationDto: PaginationDto ) {
+    return this.pokemonService.findAll(paginationDto);
   }
 
   @Get(':term')

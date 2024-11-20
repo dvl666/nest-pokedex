@@ -12,6 +12,15 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      /**
+       * transform: true -> Con esto se habilita la transformacion de los datos, por ejemplo si se recibe un string
+       * enableImplicitConversion: true -> Con esto se habilita la conversion implicita de los tipos de datos, por ejemplo
+       * si se espera un numero y se recibe un string 
+       */
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      }
     }),
   );
   
