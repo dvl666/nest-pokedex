@@ -17,6 +17,7 @@ npm i
 npm i -g @nestjs/cli
 ```
 4. Tener instalado docker
+
 5. Instalar la imagen de mongodb (version 5)
 ```
 docker pull mongo:5.0.0
@@ -25,6 +26,15 @@ docker pull mongo:5.0.0
 ```
 docker-compose up -d
 ```
+7. Levantar el proyecto con:
+```
+npm run start:dev
+```
+8. Mandar solicitud GET a
+```
+http://localhost:3000/api/v2/seed
+```
+
 
 ## Stack utilizado
 * MongoDB
