@@ -33,7 +33,9 @@ import { JoiValidationSchema } from './common/config/joi.validation';
     /**
      * Se realiza la conexión a la base de datos de MongoDB
      */
-    MongooseModule.forRoot( envConfig().mongodb ),
+    MongooseModule.forRoot( envConfig().mongodb, {
+      dbName: 'nestjs-pokemons',
+    } ),
     /**
      * Importamos el módulo `PokemonModule` que contiene toda la lógica y configuración
      * necesaria para manejar las rutas y operaciones relacionadas con los pokemones.
