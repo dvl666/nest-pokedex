@@ -5,9 +5,9 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
-import { config } from 'environment';
 import { ConfigModule } from '@nestjs/config';
 import { envConfig } from './common/config/env.config';
+import { JoiValidationSchema } from './common/config/joi.validation';
 
 @Module({
   /**
@@ -20,6 +20,7 @@ import { envConfig } from './common/config/env.config';
      */
     ConfigModule.forRoot({
       load: [envConfig],
+      validationSchema: JoiValidationSchema // -> Se agrega el esquema de validación
     }),
     /**
      * Configuramos `ServeStaticModule` para servir archivos estáticos.
