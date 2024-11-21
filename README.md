@@ -26,11 +26,13 @@ docker pull mongo:5.0.0
 ```
 docker-compose up -d
 ```
-7. Levantar el proyecto con:
+7. Clonar el archivo __.env.template__ y renombrar la copia a __.env__ (asignar valores si es necesario)
+
+8. Levantar el proyecto con:
 ```
 npm run start:dev
 ```
-8. Mandar solicitud GET a
+9. Mandar solicitud GET a
 ```
 http://localhost:3000/api/v2/seed
 ```
